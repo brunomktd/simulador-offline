@@ -22,16 +22,6 @@ public class SimulacaoServiceImpl implements SimulacaoService {
     private MapperUtil mapperUtil;
     @Autowired
     private GrupoRepository grupoRepository;
-    @Autowired
-    private ProdutoRepository produtoRepository;
-
-
-    @Override
-    public Stream<ProdutoResponse> obterTiposDeBens() {
-        return produtoRepository.findAll().stream().map(
-                p -> mapperUtil.map(p, ProdutoResponse.class)
-        );
-    }
 
     public List<PlanosResponse> obterPlanos(Integer idBem, Integer creditoSolicitado) {
         if(creditoSolicitado == null){
@@ -41,9 +31,16 @@ public class SimulacaoServiceImpl implements SimulacaoService {
             var planosEncontrados = obterPlanosPorBem(idBem);
             var listDePlanosAscCreditoMax = planosEncontrados.stream().filter(p -> p.getCreditoMax() <= creditoSolicitado).collect(toList());
 
+            if(listDePlanosAscCreditoMax.size() == 0){
+                var plano = planosEncontrados.stream().findFirst();
+                if(plano.isPresent()){
+                    planos.add(plano.get());
+                    return planos;
+                }
+            }
+
             var primeiroPlanoDesc = listDePlanosAscCreditoMax
                     .stream().max(Comparator.comparing(PlanosResponse::getCreditoMax));
-//                    .collect(toList());
 
 
             var primeiroCredito = primeiroPlanoDesc.get().getCreditoMax();

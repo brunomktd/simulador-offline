@@ -1,7 +1,5 @@
 package br.com.embracon.controller.response;
 
-import br.com.embracon.model.Produto;
-import br.com.embracon.model.Unidade;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -10,7 +8,7 @@ import java.time.LocalDate;
 @Data
 public class PlanosResponse {
     private Integer id;
-    private Produto bem;
+    private String bem;
     private Integer grupo;
     private Integer creditoMin;
     private Integer creditoMax;
@@ -20,5 +18,6 @@ public class PlanosResponse {
     private BigDecimal taxa;
     private Boolean status;
     private LocalDate vencimento;
-    private Unidade unidade;
+    private Integer codigoUnidade;
+
 }
