@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api")
 public class UnidadeController {
@@ -19,5 +21,10 @@ public class UnidadeController {
     @GetMapping("/unidades/{id}")
     public ResponseEntity<UnidadeResponse> show(@PathVariable Integer id){
         return ResponseEntity.ok(unidadeService.obterUnidadeEspecifica(id));
+    }
+
+    @GetMapping("/unidades")
+    public ResponseEntity<List<UnidadeResponse>> index(){
+        return ResponseEntity.ok(unidadeService.obterTodasUnidades());
     }
 }
