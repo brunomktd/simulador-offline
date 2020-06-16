@@ -15,9 +15,10 @@ public class PlanosResponse {
     private Integer prazo;
     private Integer prazoComercial;
     private Integer qtdParticipantes;
-    private BigDecimal taxa;
+    private Double taxa;
     private Boolean status;
     private LocalDate vencimento;
     private Integer codigoUnidade;
-
+    private String parcelaAntes;
+    private String parcelaDepois;
 }

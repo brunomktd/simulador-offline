@@ -2,16 +2,14 @@ package br.com.embracon.service.impl;
 
 import br.com.embracon.common.utils.MapperUtil;
 import br.com.embracon.controller.response.PlanosResponse;
-import br.com.embracon.controller.response.ProdutoResponse;
 import br.com.embracon.model.Grupo;
 import br.com.embracon.repository.GrupoRepository;
-import br.com.embracon.repository.ProdutoRepository;
 import br.com.embracon.service.SimulacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.util.*;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -44,6 +42,7 @@ public class SimulacaoServiceImpl implements SimulacaoService {
 
 
             var primeiroCredito = primeiroPlanoDesc.get().getCreditoMax();
+
 
             var count = 0;
             var novoCredito = 0;
@@ -81,6 +80,18 @@ public class SimulacaoServiceImpl implements SimulacaoService {
                 .stream()
                 .filter(Grupo::getStatus)
                 .map(p -> mapperUtil.map( p, PlanosResponse.class))
+                .peek(this::calculaParcela)
                 .collect(toList());
     }
+
+    private void calculaParcela(PlanosResponse p) {
+        p.setParcelaAntes(new DecimalFormat("#,##0.00").format(p.getCreditoMax() / p.getPrazo()));
+        p.setParcelaDepois(new DecimalFormat("#,##0.00").format(parcelaPosContemplacao(p)));
+    }
+
+    private double parcelaPosContemplacao(PlanosResponse p) {
+        return ((((p.getPrazoComercial() * p.getTaxa()) * p.getCreditoMax())/100)+p.getCreditoMax())/p.getPrazoComercial();
+    }
+
+
 }
