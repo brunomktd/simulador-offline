@@ -15,7 +15,7 @@ public class SimulacaoController {
     private SimulacaoService simulacaoService;
 
     @GetMapping("/planos/{idBem}")
-    public List<PlanosResponse> buscaPlanosPorCredito(
+    public List<PlanosResponse> buscarPlanos(
             @PathVariable Integer idBem,
             @RequestParam(required = false) Integer creditoSolicitado){
 

@@ -40,9 +40,7 @@ public class SimulacaoServiceImpl implements SimulacaoService {
             var primeiroPlanoDesc = listDePlanosAscCreditoMax
                     .stream().max(Comparator.comparing(PlanosResponse::getCreditoMax));
 
-
             var primeiroCredito = primeiroPlanoDesc.get().getCreditoMax();
-
 
             var count = 0;
             var novoCredito = 0;
