@@ -61,24 +61,20 @@ public class PlanosServiceImpl implements PlanosService {
     }
 
     private Grupo verificaGrupo(PlanosRequest planosRequest) {
-        try {
-            var existingGroup = grupoRepository.findByGrupo(planosRequest.getGrupo());
-            var unidade = verificaUnidadeDeNegocio(planosRequest);
-            var tipoBem = verificaBemInteresse(planosRequest);
+        var existingGroup = grupoRepository.findByGrupo(planosRequest.getGrupo());
+        var unidade = verificaUnidadeDeNegocio(planosRequest);
+        var tipoBem = verificaBemInteresse(planosRequest);
 
-            if(existingGroup.isPresent() && existingGroup.get().getUnidade().getCodigoUnidade().equals(unidade.getCodigoUnidade())){
-                System.out.println("Grupo já está cadastrado para essa unidade de negócio");
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Grupo já está cadastrado para essa unidade de negócio");
-            }
-
-            Grupo novoGrupo = mapperUtil.map(planosRequest, Grupo.class);
-            novoGrupo.setUnidade(unidade);
-            novoGrupo.setBem(tipoBem);
-
-            return grupoRepository.save(novoGrupo);
-        } catch (Exception e) {
-            System.out.println("Alguma chave primária está duplicada");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Alguma chave primária está duplicada");
+        if(existingGroup.isPresent() && existingGroup.get().getUnidade().getCodigoUnidade().equals(unidade.getCodigoUnidade())){
+            System.out.println("Grupo já está cadastrado para essa unidade de negócio");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Grupo já está cadastrado para essa unidade de negócio");
         }
+
+        Grupo novoGrupo = mapperUtil.map(planosRequest, Grupo.class);
+        novoGrupo.setUnidade(unidade);
+        novoGrupo.setBem(tipoBem);
+
+        return grupoRepository.save(novoGrupo);
+
     }
 }

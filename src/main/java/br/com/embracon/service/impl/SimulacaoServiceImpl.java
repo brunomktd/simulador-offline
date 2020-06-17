@@ -2,7 +2,8 @@ package br.com.embracon.service.impl;
 
 import br.com.embracon.common.utils.CalculosUtil;
 import br.com.embracon.common.utils.MapperUtil;
-import br.com.embracon.controller.response.PlanosResponse;
+import br.com.embracon.controller.response.PlanosPorBensResponse;
+import br.com.embracon.controller.response.PlanosPorCreditoResponse;
 import br.com.embracon.model.Grupo;
 import br.com.embracon.repository.GrupoRepository;
 import br.com.embracon.service.SimulacaoService;
@@ -12,8 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.text.DecimalFormat;
-import java.time.LocalDate;
 import java.util.*;
 
 import static java.util.stream.Collectors.toList;
@@ -28,60 +27,61 @@ public class SimulacaoServiceImpl implements SimulacaoService {
     @Autowired
     private GrupoRepository grupoRepository;
 
-    public List<PlanosResponse> obterPlanos(Integer idBem, Integer creditoSolicitado) {
-        if(creditoSolicitado == null){
-            return obterPlanosPorBem(idBem).stream().map(p -> mapperUtil.map(p, PlanosResponse.class)).collect(toList());
-        } else {
-            var planosEncontrados = obterPlanosPorBem(idBem);
-            var listDePlanosAscCreditoMax = planosEncontrados.stream().filter(p -> p.getCreditoMax() <= creditoSolicitado).collect(toList());
+    public List<PlanosPorCreditoResponse> obterPlanos(Integer idBem, Integer creditoSolicitado) {
+        var planosEncontrados = obterPlanosPorBem(idBem);
+        var listDePlanosAscCreditoMax = planosEncontrados.stream().filter(p -> p.getCreditoMax() <= creditoSolicitado).collect(toList());
 
-            var planos = new ArrayList<>();
+        var planos = new ArrayList<>();
 
-            if(listDePlanosAscCreditoMax.size() == 0){
-                var novoPlano = montaPlanosComCreditoMin(planosEncontrados);
-                planos.add(novoPlano);
-                return planos.stream().map(pl -> mapperUtil.map(pl, PlanosResponse.class)).collect(toList());
-            }
-
-            var planoDecrecente = listDePlanosAscCreditoMax
-                    .stream().max(Comparator.comparing(SimulacaoServiceDto::getCreditoMax)).get();
-
-            Integer creditoMaxDoGrupo = planoDecrecente.getCreditoMax();
-
-
-            var count = 0;
-            var novoCredito = 0;
-
-            for(var i = creditoMaxDoGrupo; i <= creditoSolicitado; i+=creditoMaxDoGrupo ){
-                novoCredito += creditoMaxDoGrupo;
-                count += 1;
-                var novoPlano = montaPlanosComCreditoMax(planoDecrecente);
-                planos.add(novoPlano);
-//                planos.add(planoDecrecente);
-            }
-
-            var restante = creditoSolicitado - novoCredito;
-
-            var primeiroItemDaLista = listDePlanosAscCreditoMax.stream().findFirst().get();
-
-            if(restante > 0 ){
-                if(restante >= primeiroItemDaLista.getCreditoMin() && restante <= primeiroItemDaLista.getCreditoMax()){
-                    planos.add(montaPlanosComCreditoRestante(primeiroItemDaLista, restante));
-                } else if(restante <= primeiroItemDaLista.getCreditoMin()){
-                    planos.add(montaPlanosComCreditoRestante(primeiroItemDaLista, restante));
-                } else if(restante > primeiroItemDaLista.getCreditoMax()) {
-                    // Cria um objeto com o que falta para completar
-                    var restantePlus = planosEncontrados.stream().filter(p -> restante >= p.getCreditoMin() && restante <= p.getCreditoMax()).findFirst();
-                    restantePlus.ifPresent(simulacaoServiceDto -> planos.add(montaPlanosComCreditoRestante(simulacaoServiceDto, restante)));
-                }
-            }
-
-            return planos.stream().map(p -> mapperUtil.map(p, PlanosResponse.class)).collect(toList());
+        if (listDePlanosAscCreditoMax.size() == 0) {
+            var novoPlano = montaPlanosComCreditoMin(planosEncontrados);
+            planos.add(novoPlano);
+            return planos.stream().map(pl -> mapperUtil.map(pl, PlanosPorCreditoResponse.class)).collect(toList());
         }
+
+        var planoDecrecente = listDePlanosAscCreditoMax
+                .stream().max(Comparator.comparing(SimulacaoServiceDto::getCreditoMax)).get();
+
+        Integer creditoMaxDoGrupo = planoDecrecente.getCreditoMax();
+
+
+        var count = 0;
+        var novoCredito = 0;
+
+        for (var i = creditoMaxDoGrupo; i <= creditoSolicitado; i += creditoMaxDoGrupo) {
+            novoCredito += creditoMaxDoGrupo;
+            count += 1;
+            var novoPlano = montaPlanosComCreditoMax(planoDecrecente);
+            planos.add(novoPlano);
+        }
+
+        var restante = creditoSolicitado - novoCredito;
+
+        var primeiroItemDaLista = listDePlanosAscCreditoMax.stream().findFirst().get();
+
+        if (restante > 0) {
+            if (restante >= primeiroItemDaLista.getCreditoMin() && restante <= primeiroItemDaLista.getCreditoMax()) {
+                planos.add(montaPlanosComCreditoRestante(primeiroItemDaLista, restante));
+            } else if (restante <= primeiroItemDaLista.getCreditoMin()) {
+                planos.add(montaPlanosComCreditoRestante(primeiroItemDaLista, restante));
+            } else if (restante > primeiroItemDaLista.getCreditoMax()) {
+                // Cria um objeto com o que falta para completar
+                var restantePlus = planosEncontrados.stream().filter(p -> restante >= p.getCreditoMin() && restante <= p.getCreditoMax()).findFirst();
+                restantePlus.ifPresent(simulacaoServiceDto -> planos.add(montaPlanosComCreditoRestante(simulacaoServiceDto, restante)));
+            }
+        }
+
+        return planos.stream().map(p -> mapperUtil.map(p, PlanosPorCreditoResponse.class)).collect(toList());
+
     }
 
-    private PlanosResponse montaPlanosComCreditoRestante(SimulacaoServiceDto p, Integer restante) {
-        PlanosResponse novoPlano = new PlanosResponse();
+    @Override
+    public List<PlanosPorBensResponse> obterPlanosPorTipoDeBem(Integer idBem) {
+        return obterPlanosPorBem(idBem).stream().map(p -> mapperUtil.map(p, PlanosPorBensResponse.class)).collect(toList());
+    }
+
+    private PlanosPorCreditoResponse montaPlanosComCreditoRestante(SimulacaoServiceDto p, Integer restante) {
+        PlanosPorCreditoResponse novoPlano = new PlanosPorCreditoResponse();
 
         novoPlano.setId(p.getId());
         novoPlano.setBem(p.getBem());
@@ -100,8 +100,8 @@ public class SimulacaoServiceImpl implements SimulacaoService {
         return novoPlano;
     }
 
-    private PlanosResponse montaPlanosComCreditoMax(SimulacaoServiceDto p) {
-        PlanosResponse novoPlano = new PlanosResponse();
+    private PlanosPorCreditoResponse montaPlanosComCreditoMax(SimulacaoServiceDto p) {
+        PlanosPorCreditoResponse novoPlano = new PlanosPorCreditoResponse();
 
         novoPlano.setId(p.getId());
         novoPlano.setBem(p.getBem());
@@ -120,12 +120,12 @@ public class SimulacaoServiceImpl implements SimulacaoService {
         return novoPlano;
     }
 
-    private PlanosResponse montaPlanosComCreditoMin(List<SimulacaoServiceDto> planosEncontrados) {
+    private PlanosPorCreditoResponse montaPlanosComCreditoMin(List<SimulacaoServiceDto> planosEncontrados) {
         var plano = planosEncontrados.stream().findFirst();
-        if(plano.isPresent()){
+        if (plano.isPresent()) {
             var p = plano.get();
 
-            PlanosResponse novoPlano = new PlanosResponse();
+            PlanosPorCreditoResponse novoPlano = new PlanosPorCreditoResponse();
 
             novoPlano.setId(p.getId());
             novoPlano.setBem(p.getBem());
@@ -150,7 +150,7 @@ public class SimulacaoServiceImpl implements SimulacaoService {
         return grupoRepository.findAllByBemId(idBem)
                 .stream()
                 .filter(Grupo::getStatus)
-                .map(p -> mapperUtil.map( p, SimulacaoServiceDto.class))
+                .map(p -> mapperUtil.map(p, SimulacaoServiceDto.class))
                 .peek(this::calculaParcela)
                 .collect(toList());
     }

@@ -5,11 +5,12 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class PlanosResponse {
+public class PlanosPorBensResponse {
     private Integer id;
     private String bem;
     private Integer grupo;
-    private Integer credito;
+    private Integer creditoMin;
+    private Integer creditoMax;
     private Integer prazo;
     private Integer prazoComercial;
     private Integer qtdParticipantes;
