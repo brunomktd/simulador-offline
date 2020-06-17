@@ -2,7 +2,6 @@ package br.com.embracon.common.utils;
 
 import org.springframework.stereotype.Component;
 
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 @Component("calculos")
