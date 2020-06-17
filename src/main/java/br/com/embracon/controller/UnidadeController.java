@@ -19,12 +19,12 @@ public class UnidadeController {
     private UnidadeService unidadeService;
 
     @GetMapping("/unidades/{id}")
-    public ResponseEntity<UnidadeResponse> show(@PathVariable Integer id){
+    public ResponseEntity<UnidadeResponse> buscarUnidadeNegocioPorId(@PathVariable Integer id){
         return ResponseEntity.ok(unidadeService.obterUnidadeEspecifica(id));
     }
 
     @GetMapping("/unidades")
-    public ResponseEntity<List<UnidadeResponse>> index(){
+    public ResponseEntity<List<UnidadeResponse>> buscarTodasUnidadesNegocio(){
         return ResponseEntity.ok(unidadeService.obterTodasUnidades());
     }
 }

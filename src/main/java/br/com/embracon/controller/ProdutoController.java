@@ -18,7 +18,7 @@ public class ProdutoController {
     private ProdutoService produtoService;
 
     @GetMapping("/produtos")
-    public ResponseEntity<List<ProdutoResponse>> index(){
+    public ResponseEntity<List<ProdutoResponse>> buscarTodosTiposdeBem(){
         var produtos =  produtoService.obterTodosProdutos();
         return ResponseEntity.ok(produtos);
     }

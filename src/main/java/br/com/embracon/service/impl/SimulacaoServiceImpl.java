@@ -2,7 +2,7 @@ package br.com.embracon.service.impl;
 
 import br.com.embracon.common.utils.CalculosUtil;
 import br.com.embracon.common.utils.MapperUtil;
-import br.com.embracon.controller.response.PlanosPorBensResponse;
+import br.com.embracon.controller.response.PlanosResponse;
 import br.com.embracon.controller.response.PlanosPorCreditoResponse;
 import br.com.embracon.model.Grupo;
 import br.com.embracon.repository.GrupoRepository;
@@ -76,8 +76,8 @@ public class SimulacaoServiceImpl implements SimulacaoService {
     }
 
     @Override
-    public List<PlanosPorBensResponse> obterPlanosPorTipoDeBem(Integer idBem) {
-        return obterPlanosPorBem(idBem).stream().map(p -> mapperUtil.map(p, PlanosPorBensResponse.class)).collect(toList());
+    public List<PlanosResponse> obterPlanosPorTipoDeBem(Integer idBem) {
+        return obterPlanosPorBem(idBem).stream().map(p -> mapperUtil.map(p, PlanosResponse.class)).collect(toList());
     }
 
     private PlanosPorCreditoResponse montaPlanosComCreditoRestante(SimulacaoServiceDto p, Integer restante) {

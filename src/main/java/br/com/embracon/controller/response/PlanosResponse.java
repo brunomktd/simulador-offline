@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class PlanosPorBensResponse {
+public class PlanosResponse {
     private Integer id;
     private String bem;
     private Integer grupo;
