@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Data
 public class Grupo {
     @Id
-    @SequenceGenerator(name = "grupos_gen", sequenceName = "grupos_seq", allocationSize = 1, initialValue = 1)
+    @SequenceGenerator(name = "grupos_gen", sequenceName = "grupos_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "grupos_gen")
     private Integer id;
     private Integer grupo;
@@ -19,7 +19,7 @@ public class Grupo {
     private Integer prazo;
     private Integer prazoComercial;
     private Integer qtdParticipantes;
-    private BigDecimal taxa;
+    private Double taxa;
     private Boolean status;
     private LocalDate vencimento;
 

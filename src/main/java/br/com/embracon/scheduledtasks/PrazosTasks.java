@@ -24,8 +24,6 @@ public class PrazosTasks {
         LocalDate hoje = LocalDate.now();
 
         verificaGruposAtivos().forEach(g -> {
-            System.out.println(g.getVencimento().getMonth());
-            System.out.println(g.getVencimento().getMonthValue());
 
             if(g.getVencimento().getDayOfMonth() >= hoje.getDayOfMonth() &&
             g.getVencimento().getMonthValue() <= hoje.getMonthValue()){
@@ -44,7 +42,6 @@ public class PrazosTasks {
 
 
     private List<Grupo> verificaGruposAtivos() {
-        var grupos =  grupoRepository.findAllByStatus(true);
-        return grupos;
+        return grupoRepository.findAllByStatus(true);
     }
 }

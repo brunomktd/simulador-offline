@@ -11,4 +11,6 @@ public interface GrupoRepository extends JpaRepository<Grupo, Integer> {
     Optional<Grupo> findByGrupo(Integer grupo);
 
     List<Grupo> findAllByStatus(boolean ativos);
+
+    List<Grupo> findAllByBemId(Integer idBem);
 }

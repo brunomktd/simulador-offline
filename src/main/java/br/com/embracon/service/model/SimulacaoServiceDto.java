@@ -1,11 +1,11 @@
-package br.com.embracon.controller.response;
+package br.com.embracon.service.model;
 
 import lombok.Data;
 
 import java.time.LocalDate;
 
 @Data
-public class PlanosResponse {
+public class SimulacaoServiceDto {
     private Integer id;
     private String bem;
     private Integer grupo;

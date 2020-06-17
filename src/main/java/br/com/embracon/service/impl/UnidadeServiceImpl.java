@@ -10,26 +10,30 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UnidadeServiceImpl implements UnidadeService {
     @Autowired
     private MapperUtil mapperUtil;
-
     @Autowired
     private UnidadeRepository unidadeRepository;
 
     @Override
     public UnidadeResponse obterUnidadeEspecifica(Integer id) {
         Optional<Unidade> unidade = unidadeRepository.findById(id);
-        try {
-            if(unidade.isPresent()){
-                return mapperUtil.map(unidade.get(), UnidadeResponse.class);
-            }
-        } catch (Exception e){
+        if (unidade.isPresent()) {
+            return mapperUtil.map(unidade.get(), UnidadeResponse.class);
+        } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Id da unidade não existe");
         }
-        return null;
+    }
+
+    @Override
+    public List<UnidadeResponse> obterTodasUnidades() {
+        List<Unidade> listaDeUnidades = unidadeRepository.findAll();
+        return listaDeUnidades.stream().map(unidade -> mapperUtil.map(unidade, UnidadeResponse.class)).collect(Collectors.toList());
     }
 }
