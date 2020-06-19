@@ -1,5 +1,6 @@
 package br.com.embracon.service;
 
+import br.com.embracon.controller.request.AtualizaPlanosRequest;
 import br.com.embracon.controller.request.PlanosRequest;
 import br.com.embracon.controller.response.PlanosResponse;
 import br.com.embracon.model.Grupo;
@@ -11,4 +12,6 @@ public interface PlanosService {
     Grupo criarPlano(PlanosRequest planosRequest);
 
     List<PlanosResponse> obterTodosPlanos(Pageable paginacao);
+
+    Grupo atualizaPlano(Integer codigoGrupo, AtualizaPlanosRequest planosRequest);
 }

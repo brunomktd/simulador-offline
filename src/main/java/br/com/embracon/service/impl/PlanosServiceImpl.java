@@ -1,6 +1,7 @@
 package br.com.embracon.service.impl;
 
 import br.com.embracon.common.utils.MapperUtil;
+import br.com.embracon.controller.request.AtualizaPlanosRequest;
 import br.com.embracon.controller.request.PlanosRequest;
 import br.com.embracon.controller.response.PlanosResponse;
 import br.com.embracon.model.Grupo;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -49,6 +51,24 @@ public class PlanosServiceImpl implements PlanosService {
                 .stream()
                 .map(p -> mapperUtil.map(p, PlanosResponse.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Grupo atualizaPlano(Integer codigoGrupo, AtualizaPlanosRequest p) {
+        Optional<Grupo> grupo = grupoRepository.findByGrupo(codigoGrupo);
+        if(grupo.isPresent()){
+            var g = grupo.get();
+                g.setCreditoMin(p.getCreditoMin());
+                g.setCreditoMax(p.getCreditoMax());
+                g.setPrazo(p.getPrazo());
+                g.setPrazoComercial(p.getPrazoComercial());
+                g.setQtdParticipantes(p.getQtdParticipantes());
+                g.setTaxa(p.getTaxa().doubleValue());
+                g.setStatus(p.getStatus());
+                g.setVencimento(p.getVencimento());
+            return grupoRepository.save(g);
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "O Grupo solicitado não existe");
     }
 
     private Unidade verificaUnidadeDeNegocio(PlanosRequest planosRequest) {
