@@ -1,5 +1,6 @@
 package br.com.embracon.controller.request;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.*;
@@ -8,29 +9,29 @@ import java.time.LocalDate;
 
 @Data
 public class PlanosRequest {
-    @NotNull
+    @NotNull @ApiModelProperty(value = "46")
     private Integer codigoUnidade;
-    @NotNull @NotEmpty
+    @NotNull @NotEmpty @ApiModelProperty(value = "up")
     private String nomeUnidade;
-    @NotNull @NotEmpty
+    @NotNull @NotEmpty @ApiModelProperty(value = "serviços")
     private String bem;
-    @NotNull @Min(1)
+    @NotNull @Min(1) @ApiModelProperty(value = "123456")
     private Integer grupo;
-    @NotNull @Min(1)
+    @NotNull @Min(1) @ApiModelProperty(value = "15000")
     private Integer creditoMin;
-    @NotNull @Min(1)
+    @NotNull @Min(1) @ApiModelProperty(value = "30000")
     private Integer creditoMax;
-    @NotNull @Min(1)
+    @NotNull @Min(1) @ApiModelProperty(value = "40")
     private Integer prazo;
-    @NotNull @Min(1)
+    @NotNull @Min(1) @ApiModelProperty(value = "26")
     private Integer prazoComercial;
-    @NotNull @Min(1)
+    @NotNull @Min(1) @ApiModelProperty(value = "400")
     private Integer qtdParticipantes;
-    @NotNull @DecimalMin("0.00")
+    @NotNull @DecimalMin("0.00") @ApiModelProperty(value = "0.45")
     private BigDecimal taxa;
-    @NotNull
+    @NotNull @ApiModelProperty(value = "true ou false")
     private Boolean status;
-    @NotNull
+    @NotNull @ApiModelProperty(value = "2020-05-15")
     private LocalDate vencimento;
 }
 
