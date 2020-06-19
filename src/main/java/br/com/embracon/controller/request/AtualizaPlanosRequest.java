@@ -3,20 +3,14 @@ package br.com.embracon.controller.request;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
-public class PlanosRequest {
-    @NotNull @ApiModelProperty(value = "46")
-    private Integer codigoUnidade;
-    @NotNull @NotEmpty @ApiModelProperty(value = "up")
-    private String nomeUnidade;
-    @NotNull @NotEmpty @ApiModelProperty(value = "serviços")
-    private String bem;
-    @NotNull @Min(1) @ApiModelProperty(value = "123456")
-    private Integer grupo;
+public class AtualizaPlanosRequest {
     @NotNull @Min(1) @ApiModelProperty(value = "15000")
     private Integer creditoMin;
     @NotNull @Min(1) @ApiModelProperty(value = "30000")

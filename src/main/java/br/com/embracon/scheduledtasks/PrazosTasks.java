@@ -19,13 +19,13 @@ public class PrazosTasks {
 
     private static final Logger Log = LoggerFactory.getLogger(PrazosTasks.class);
 
-    @Scheduled(fixedRate = 30000)
+    @Scheduled(fixedRate = 3600000)
     public void updatePrazoComercial(){
         LocalDate hoje = LocalDate.now();
 
         verificaGruposAtivos().forEach(g -> {
 
-            if(g.getVencimento().getDayOfMonth() >= hoje.getDayOfMonth() &&
+            if(g.getVencimento().getDayOfMonth() == hoje.getDayOfMonth() &&
             g.getVencimento().getMonthValue() <= hoje.getMonthValue()){
 
                 g.setPrazoComercial(g.getPrazoComercial() - 1);

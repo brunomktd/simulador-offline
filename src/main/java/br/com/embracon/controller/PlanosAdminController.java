@@ -1,8 +1,8 @@
 package br.com.embracon.controller;
 
 import br.com.embracon.common.utils.MapperUtil;
+import br.com.embracon.controller.request.AtualizaPlanosRequest;
 import br.com.embracon.controller.request.PlanosRequest;
-import br.com.embracon.controller.response.PlanosPorCreditoResponse;
 import br.com.embracon.controller.response.PlanosResponse;
 import br.com.embracon.service.PlanosService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +18,8 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/planos")
-public class PlanosController {
+@RequestMapping("/api/admin/planos")
+public class PlanosAdminController {
 
     @Autowired
     private PlanosService planosService;
@@ -41,5 +41,14 @@ public class PlanosController {
         return planosService.obterTodosPlanos(paginacao);
     }
 
+    @PutMapping("/{codigoGrupo}")
+    public ResponseEntity<PlanosResponse> atualizaPlano(
+            @PathVariable Integer codigoGrupo,
+            @RequestBody @Valid AtualizaPlanosRequest atualizaPlanosRequest, UriComponentsBuilder uriBuilder){
 
+        var plano = mapperUtil.map(planosService.atualizaPlano(codigoGrupo, atualizaPlanosRequest), PlanosResponse.class);
+
+        URI uri = uriBuilder.path("/{id}").buildAndExpand(plano.getId()).toUri();
+        return ResponseEntity.created(uri).body(plano);
+    }
 }

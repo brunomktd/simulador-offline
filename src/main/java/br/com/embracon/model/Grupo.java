@@ -3,7 +3,6 @@ package br.com.embracon.model;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
